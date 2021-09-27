@@ -1,8 +1,7 @@
-import './navBar.css'
+import './components.css'
 
 export default function NavBar() {
   return (
-    // <div></div>
     <nav class="bp3-navbar bp3-dark">
       <div class="margin: 0 auto; width: 480px;">
         <div class="bp3-navbar-group bp3-align-left">
