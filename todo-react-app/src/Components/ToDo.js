@@ -1,29 +1,25 @@
 import React, { useEffect, useState, useContext } from "react";
-import useForm from "../Hooks/form";
-import "./navBar.css";
-import { v4 as uuid } from "uuid";
+import Form from "./Form";
+import "./components.css";
 import { Card, H5, Elevation } from "@blueprintjs/core";
 import { SettingsContext } from "../Context/settings";
 
-function ToDo(props) {
+export default function ToDo(props) {
+  const settings = useContext(SettingsContext);
   const [list, setList] = useState([]);
+  const [index, setIndex] = useState(0);
   const [incomplete, setIncomplete] = useState([]);
-  const { handleChange, handleSubmit } = useForm(addItem);
-  // const settings = useContext(SettingsContext);
-  // console.log(SettingsContext);
-  // console.log(settings);
-
-  function addItem(item) {
-    console.log(item);
-    item.id = uuid();
-    item.complete = false;
-    setList([...list, item]);
-  }
 
   function deleteItem(id) {
     const items = list.filter((item) => item.id !== id);
     setList(items);
   }
+
+  let listParts = list.reduce((all, one, i) => {
+    const ch = Math.floor(i / settings.itemsNumber);
+    all[ch] = [].concat(all[ch] || [], one);
+    return all;
+  }, []);
 
   function toggleComplete(id) {
     const items = list.map((item) => {
@@ -42,79 +38,45 @@ function ToDo(props) {
     document.title = `To Do List: ${incomplete}`;
   }, [list]);
 
-  return (
-    <>
-      <div className="detailContainer">
-        <header>
-          <h2 className="inputs">To Do List: {incomplete} items pending</h2>
-        </header>
-
-        <form onSubmit={handleSubmit}>
-          <h3 className="inputs">Add To Do Item</h3>
-
-          <label>
-            <input
-              onChange={handleChange}
-              className="inputs"
-              name="text"
-              type="text"
-              placeholder="Item Details"
-            />
-          </label>
-
-          <label>
-            <input
-              className="inputs"
-              onChange={handleChange}
-              name="assignee"
-              type="text"
-              placeholder="Assignee Name"
-            />
-          </label>
-
-          <label>
-            <input
-              onChange={handleChange}
-              className="inputs"
-              defaultValue={3}
-              type="range"
-              min={1}
-              max={5}
-              name="difficulty"
-            />
-          </label>
-
-          <label>
-            <button className="inputs" type="submit">
-              Add Item
-            </button>
-          </label>
-        </form>
-      </div>
-      <div className="listContainer">
-        {list.map((item) => (
-          <div key={item.id} className="cards">
-            <Card elevation={Elevation.THREE}>
-              <H5>{item.text}</H5>
-              <p>Assigned to: {item.assignee}</p>
-              <div onClick={() => toggleComplete(item.id)}>
-                Complete: {item.complete.toString()}
-              </div>
-            </Card>
-            <hr />
-          </div>
-        ))}
-        <SettingsContext>
-          {(settings) => (
-            <button>Next</button>
-            // {
-            //   list.length > settings.itemsNumber ? <button>Next</button> : {}
-            // }
+  if (listParts[index]) {
+    return (
+      <>
+        <Form list={list} incomplete={incomplete} setList={setList} />
+        <div className="listContainer">
+          {/* Next Button */}
+          {list.length > settings.itemsNumber &&
+          index < listParts.length - 1 ? (
+            <button id='nextBtn' className='traversButtons' onClick={() => setIndex(index + 1)}>Next</button>
+          ) : (
+            <div />
           )}
-        </SettingsContext>
-      </div>
-    </>
-  );
+          {/* Prev Button */}
+          {index > 0 ? (
+            <button className='traversButtons' onClick={() => setIndex(index - 1)}>Prev</button>
+          ) : (
+            <div />
+          )}
+          {listParts[index].map((item) => {
+            return (
+              <div key={item.id} className="cards">
+                {/* if(!(item.complete && !(settungs.showCompleted))){ */}
+                <Card elevation={Elevation.THREE}>
+                  <H5>{item.text}</H5>
+                  <p>Assigned to: {item.assignee}</p>
+                  <div onClick={() => toggleComplete(item.id)}>
+                    Complete: {item.complete.toString()}
+                  </div>
+                  <button onClick={() => deleteItem(item.id)}>Close</button>
+                </Card>
+                {/* }} */}
+                <hr />
+              </div>
+            );
+          })}
+        </div>
+      </>
+    );
+  } else {
+    return <Form list={list} incomplete={incomplete} setList={setList} />;
+  }
 }
-
-export default ToDo;

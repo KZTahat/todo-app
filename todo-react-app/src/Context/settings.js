@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 
-export const SettingsContext = React.createContext();
+export const SettingsContext = React.createContext('default');
 
-export default function settingsProvider(props) {
+console.log(SettingsContext);
+
+export default function SettingsProvider(props) {
+  let [showCompleted, setCompleted] = useState(true);
+  let [itemsNumber, setitemsNumber] = useState(3);
+  let [sortType, setsortType] = useState("Difficulty");
+
   let state = {
-    displayCompleted: true,
-    itemsNumber: 3,
-    sortType: "Difficulty",
+    showCompleted,
+    itemsNumber,
+    sortType,
   };
 
   return (
