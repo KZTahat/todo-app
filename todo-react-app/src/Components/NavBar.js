@@ -1,6 +1,6 @@
 import './navBar.css'
 
-function NavBar() {
+export default function NavBar() {
   return (
     // <div></div>
     <nav class="bp3-navbar bp3-dark">
@@ -22,5 +22,3 @@ function NavBar() {
     </nav>
   );
 }
-
-export default NavBar;
