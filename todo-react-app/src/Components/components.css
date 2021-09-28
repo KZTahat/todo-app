@@ -11,3 +11,11 @@
 
 #nextBtn{float: right;}
 .traversButtons{border: none; background-color: blue; color: white; width: 80px; height: 25px;}
+
+#loginButton{background-color: green; color: white; border: none;}
+#logoutButton{background-color: red; color: white; border: none;}
+.formItems{margin-right: 5px;}
+
+#signupFormContainer{border: 1px solid gray; margin: 100px;width: 50%; height: 340px;}
+#signupSpan{margin-left: 10px;}
+.signupFormItems{display: block; margin: 10px; border: 1px solid gray; width: 85%; height: 30px;}
