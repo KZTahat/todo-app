@@ -2,8 +2,6 @@ import React, { useState } from "react";
 
 export const SettingsContext = React.createContext('default');
 
-console.log(SettingsContext);
-
 export default function SettingsProvider(props) {
   let [showCompleted, setCompleted] = useState(true);
   let [itemsNumber, setitemsNumber] = useState(3);
